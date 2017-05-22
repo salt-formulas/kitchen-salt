@@ -43,6 +43,7 @@ script:
   - cd $TRAVIS_BUILD_DIR && bundle exec rspec
   # Check shell scripts
   - shellcheck lib/kitchen/provisioner/*.sh*
+  - shellcheck assets/*.sh*
   # Run test-kitchen with docker driver:
   - cd ../$FORMULA && KITCHEN_LOCAL_YAML=.kitchen.salt.yml bundle exec kitchen test client-single-ubuntu-1404 -ldebug
 
