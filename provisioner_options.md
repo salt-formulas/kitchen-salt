@@ -7,19 +7,20 @@ dry_run | false | Setting this to True makes the highstate to run with flag test
 formula | | name of the formula, used to derive the path we need to copy to the guest
 [is_file_root](#is_file_root) | false | Treat this project as a complete file_root, not just a state collection or formula
 log_level | | set salt logging level when running commands (e.g. specifying `debug` is equivalent of `-l debug`)
-salt_install| "bootstrap" | Method by which to install salt, "bootstrap", "apt" or "ppa"
-salt_bootstrap_url | "https://bootstrap.saltstack.org" | location of bootstrap script
+salt_install| "bootstrap" | Method by which to install salt, "bootstrap", "apt", "distrib" or "ppa"
+salt_bootstrap_url | "https://bootstrap.saltstack.com" | location of bootstrap script
 [salt_bootstrap_options](#salt_bootstrap_options) | | optional options passed to the salt bootstrap script
 salt_version | "latest"| desired version, only affects apt installs
 salt_apt_repo | "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest"| apt repo. For more information check [SaltStack Package Repo](https://repo.saltstack.com/)
 salt_apt_repo_key| "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub"| apt repo key. For more information check [SaltStack Package Repo](https://repo.saltstack.com/)
 salt_ppa | "ppa:saltstack/salt" | Official Ubuntu SaltStack PPA
-bootstrap_url| "https://raw.githubusercontent.com/simonmcc/kitchen-salt/master/assets/install.sh"| A bootstrap script used to provide Ruby (`ruby` and `ruby-dev`) required for the serverspec test runner on the guest OS. If this script is unable to setup Ruby, it will fallback to using Chef bootstrap installer (set via `chef_bootstrap_url`)
-chef_bootstrap_url| "https://www.getchef.com/chef/install.sh"| the chef bootstrap installer, used to provide Ruby for the serverspec test runner on the guest OS. However required is only a ruby, under assets/install.sh is an alternative (Chef free) bootstrap script prom PR#42. Example no-"chef_bootstrap url": https://raw.githubusercontent.com/simonmcc/kitchen-salt/assets/install.sh
+bootstrap_url| "https://raw.githubusercontent.com/saltstack/kitchen-salt/master/assets/install.sh"| A bootstrap script used to provide Ruby (`ruby` and `ruby-dev`) required for the serverspec test runner on the guest OS. If this script is unable to setup Ruby, it will fallback to using Chef bootstrap installer (set via `chef_bootstrap_url`)
+chef_bootstrap_url| "https://www.getchef.com/chef/install.sh"| the chef bootstrap installer, used to provide Ruby for the serverspec test runner on the guest OS. However required is only a ruby, under assets/install.sh is an alternative (Chef free) bootstrap script prom PR#42. Example no-"chef_bootstrap url": https://raw.githubusercontent.com/saltstack/kitchen-salt/assets/install.sh
 require_chef | true | Install chef ( needed by busser to run tests, if no verification driver is specified in kitchen yml)
 salt_config| "/etc/salt"|
 [salt_copy_filter](#salt_copy_filter) | [] | List of filenames to be excluded when copying states, formula & pillar data down to guest instances.
 salt_minion_config| "/etc/salt/minion"|
+salt_minion_config_template| nil | a local file used to customize minion config. The default one is provided by kitchen-salt (`lib/kitchen/provisioner/minion.erb`)
 salt_minion_id| | Customize Salt minion_id (by default Salt uses machine hostname)
 salt_env| "base"| environment to use in minion config file
 salt_file_root| "/srv/salt"|
@@ -131,6 +132,14 @@ With a .kitchen.yml like this you can now test the completed collection:
 In this example, the apache state could use functionality from the php state etc.  You're not just restricted to a single formula.
 
 ### [salt_install](id:salt_install)
+
+Choose your method to install SaltStack :
+
+* **bootstrap :** install SaltStack from bootstrap script (see: [salt_bootstrap_url](id:salt_bootstrap_url))
+* **apt :** install SaltStack from specified repository (see: [salt_apt_repo](id:salt_apt_repo))
+* **ppa :** install SaltStack from ppa repository (see: [salt_ppa](id:salt_ppa))
+* **distrib :** install SaltStack from distribution repositories
+
 ### [salt_bootstrap_options](id:salt_bootstrap_options)
 Options to pass to the salt bootstrap installer.  For example, you could choose to install salt from the develop branch like this:
 
@@ -162,7 +171,7 @@ Version of salt to install, via the git bootstrap method, unless ```salt_install
 
 ### [salt_apt_repo](id:salt_apt_repo)
 ### [salt_apt_repo_key](id:salt_apt_repo_key)
-### [ salt_ppa](id:salt_ppa)
+### [salt_ppa](id:salt_ppa)
 Adds the supplied PPA. The default being the Official SaltStack PPA. Useful when the release (e.g. vivid) does not have support via the standard boostrap script or apt repo.
 
 ### [chef_bootstrap_url](id:chef_bootstrap_url)
